@@ -1,0 +1,23 @@
+= Directus poc (proof of concept), wip
+
+https://docs.directus.io/contributing/running-locally.html
+
+== local database
+
+[source, bash]
+----
+michiel@mitulo:(poc)~/github/mihxil/directus$ psq
+psql (14.8 (Homebrew))
+Type "help" for help.
+
+postgres=# create user directus with password 'admin2k';
+CREATE ROLE
+postgres=# create database directus;
+postgres=# grant all privileges on database directus  to  directus;
+
+
+michiel@mitulo:(poc,1)~/github/mihxil/directus$ pnpm --filter api cli bootstrap
+
+----
+
+ http://localhost:5173/
