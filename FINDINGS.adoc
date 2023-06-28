@@ -1,4 +1,5 @@
 = Directus poc (proof of concept), wip
+:toc:
 
 https://docs.directus.io/contributing/running-locally.html
 
@@ -73,7 +74,27 @@ pnpm --filter app dev
   ➜  Network: use --host to expose
 
 
-Dan kan ik een model in elkaar klikken.
+I can construct a model via the data model editor.
 
-==
+This just results in tables in the database, so I figure that the schema dump could serve to model in code.
+
+== data migration
+
+I concocted a simple script to import the 3voor12 data. See link:migrate-test/3voor12-updates.py[python script]. It imported all nearly 30 thousand items in about 10 minutes. Just the most basic fields.
+
+
+== Conclusion?
+
+- Directus is a straightforward headless cms
+- It can be obtained hosted, but self hosting doesn't seem hard either
+* Just run the api and app, and a database
+* it's open source
+* I could just import all 3voor12 updates locally. Since I was doing it myself not restrictions at all.
+- Using the api seems easier then e.g. prepr. It's just a bit more forgiving. E.g. I could just use the original uuids as id's and it worked.
+- It has multiple authentication features, including azure and keycloak (not tried)
+- I figured some stuff out by just checking the code, the documentation was not always clear
+- I think embargo functionality is just in the graphql queries, if you need that.
+- Authorization seems to be on 'collection' level. I don't know if it can be based fields. At first sight it doesn't seem so.
+
+
 
