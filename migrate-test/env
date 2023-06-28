@@ -1,0 +1,6 @@
+
+# generated in ui for admin@example.com
+
+# curl -H 'Authorization: Bearer bPBC3fg4NN7G3eOdqMrs1eKJT_ZIWpSg' http://0.0.0.0:8055/items/drievoor12updates/0079ae46-8fd7-401a-a118-1c2b0df2ad94
+MIGRATE_TOKEN=bPBC3fg4NN7G3eOdqMrs1eKJT_ZIWpSg
+API_URL=http://0.0.0.0:8055
