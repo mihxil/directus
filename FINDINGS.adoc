@@ -80,7 +80,7 @@ This just results in tables in the database, so I figure that the schema dump co
 
 == data migration
 
-I concocted a simple script to import the 3voor12 data. See link:migrate-test/3voor12-updates.py[python script]. It imported all nearly 30 thousand items in about 10 minutes. Just the most basic fields.
+I concocted a simple script to import the 3voor12 data. See link:migrate-test/3voor12-updates.py[python script]. It imported all nearly 30 thousand items in about 10 minutes. Just the most basic fields, but in a quite straightforward manner.
 
 
 == Conclusion?
@@ -90,11 +90,17 @@ I concocted a simple script to import the 3voor12 data. See link:migrate-test/3v
 * Just run the api and app, and a database
 * it's open source
 * I could just import all 3voor12 updates locally. Since I was doing it myself not restrictions at all.
-- Using the api seems easier then e.g. prepr. It's just a bit more forgiving. E.g. I could just use the original uuids as id's and it worked.
+- Using the api seemed easier than e.g. prepr. It's just a bit more forgiving. E.g. I could just use the original uuids as id's and it worked.
 - It has multiple authentication features, including azure and keycloak (not tried)
 - I figured some stuff out by just checking the code, the documentation was not always clear
 - I think embargo functionality is just in the graphql queries, if you need that.
 - Authorization seems to be on 'collection' level. I don't know if it can be based fields. At first sight it doesn't seem so.
+- I didn't see predefined workflow, or 'kanban' boards or so, but I don't know what this is e.g. https://directus.io/blog/directus-flows-automate-complex-data-processes-for-your-digital-projects/
+https://docs.directus.io/guides/headless-cms/approval-workflows.html
+It seems that these kind of things are simply very flexible, and you can just set it up as you like yourself
+
+- for multilingual content something like this could be done: https://medium.com/directus/multilingual-content-setup-in-directus-i18n-4f243f72e554
+
 
 
 
