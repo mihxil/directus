@@ -30,7 +30,7 @@ michiel@mitulo:(poc,1)~/github/mihxil/directus$ pnpm --filter api cli bootstrap
 
 == Findings
 
-It sais to run the latest version of node. But if I run 20, it sais that it s too new.
+It says to run the latest version of node. But if I run 20, it says that it is too new.
 [source,bash]
 ----
 michiel@mitulo:(poc)~/github/mihxil/directus$ pnpm install
@@ -60,7 +60,7 @@ I've no to idea how to try something out.
 
 It works better if you run both app and api.
 
-I think the bootstrapping created a random passwor,d which I didn't catch.
+I think the bootstrapping created a random password, which I didn't catch.
 
 Retry:
 
@@ -82,11 +82,35 @@ This just results in tables in the database, so I figure that the schema dump co
 
 I concocted a simple script to import the 3voor12 data. See link:migrate-test/3voor12-updates.py[python script]. It imported all nearly 30 thousand items in about 10 minutes. Just the most basic fields, but in a quite straightforward manner.
 
+== Extensibility
+
+Directus seems to be very extensible. Let's try something here:
+
+https://docs.directus.io/extensions/creating-extensions.html
+
+https://github.com/npo-poms/directus-cmsselector
+
+[source, bash]
+----
+michiel@mitulo:(HEAD)~/github/npo-poms/directus-cmsselector$ nvm use 18
+Now using node v18.16.1 (npm v9.5.1)
+
+npm init directus-extension@latest
+----
+
+== Interesting extra features
+
+- Dashboarding
+- An active community (e.g. on discord)
+
 
 == Conclusion?
 
 - Directus is a straightforward headless cms
-- It can be obtained hosted, but self hosting doesn't seem hard either
+- It is tightly coupled to a relational database
+* I think this can be considered an advantage, since this is what we know well anyway
+* We like to be able to deal with large amounts of data, which should be no problem for something like postgresql. May be it would be different if we'd be dealing with billions and billions of items, but we don't expect _that_.
+- It can be obtained hosted, but self-hosting doesn't seem hard either, and may be preferable
 * Just run the api and app, and a database
 * it's open source
 * I could just import all 3voor12 updates locally. Since I was doing it myself not restrictions at all.
