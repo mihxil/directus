@@ -5,28 +5,62 @@ https://docs.directus.io/contributing/running-locally.html
 
 https://jira.vpro.nl/browse/SYS-1179
 
+== Installation
 
+=== Dependencies
+* Database (postgresql)
+* nvm
+* pnpm (https://pnpm.io/installation)
+* nodejs 18
 
-== local database
+=== Build
+[source,bash]
+----
+nvm install 18
+nvm use 18
+pnpm install
+pnpm build
+----
+
+=== Create database
 
 [source, bash]
 ----
-michiel@mitulo:(poc)~/github/mihxil/directus$ psq
-psql (14.8 (Homebrew))
-Type "help" for help.
+psql
 
 postgres=# create user directus with password 'admin2k';
 CREATE ROLE
 postgres=# create database directus;
 postgres=# grant all privileges on database directus  to  directus;
-
-
-michiel@mitulo:(poc,1)~/github/mihxil/directus$ pnpm --filter api cli bootstrap
-
 ----
 
+What is this url ?
  http://localhost:5173/
 
+=== Setup .env file (already in poc branch)
+In api/.env:
+
+[source, properties]
+----
+HOST="0.0.0.0"
+PORT=8055
+
+DB_CLIENT="pg"
+DB_HOST="localhost"
+DB_PORT=5432
+DB_DATABASE=directus
+DB_USER=directus
+DB_PASSWORD=admin2k
+
+KEY=admin
+SECRET=admin2k
+----
+
+=== Bootstrap database
+[source, bash]
+----
+pnpm --filter api cli bootstrap
+----
 
 == Findings
 
@@ -51,6 +85,7 @@ michiel@mitulo:(poc)~/github/mihxil/directus$
 michiel@mitulo:(poc)~/github/mihxil/directus$ nvm install 18
 nvm use 18
 pnpm install
+pnpm build
 ----
 
 
