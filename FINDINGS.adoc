@@ -21,6 +21,11 @@ nvm use 18
 pnpm install
 pnpm build
 ----
+For convenience set version 18 as the default:
+[source,bash]
+----
+nvm alias default 18
+----
 
 === Create database
 
@@ -30,12 +35,9 @@ psql
 
 postgres=# create user directus with password 'admin2k';
 CREATE ROLE
-postgres=# create database directus;
+postgres=# create database directus owner directus;
 postgres=# grant all privileges on database directus  to  directus;
 ----
-
-What is this url ?
- http://localhost:5173/
 
 === Setup .env file (already in poc branch)
 In api/.env:
@@ -54,6 +56,9 @@ DB_PASSWORD=admin2k
 
 KEY=admin
 SECRET=admin2k
+
+ADMIN_EMAIL=digitaal-techniek@vpro.nl
+ADMIN_PASSWORD=admin2k
 ----
 
 === Bootstrap database
@@ -61,6 +66,56 @@ SECRET=admin2k
 ----
 pnpm --filter api cli bootstrap
 ----
+
+== Running
+Documentation says you can do it with:
+[source,bash]
+----
+pnpm --recursive dev
+----
+But with a race-condition caveat.
+
+So run it (in two shells) with:
+[source,bash]
+----
+pnpm --filter api dev
+pnpm --filter app dev
+----
+This wil run the api at 8055 (as defined in .env)
+The admin interface will run at 8080, http://localhost:8080/admin/[Link]
+
+== Configuring SSO
+Create a client in the sso server to be used by directus:
+
+* Login the admin interface
+* Choose realm vpro-azure
+* Go to clients
+* Create client with the following settings:
+** Type: Openid
+** Client id: directus
+** Name: Directus
+** Client Authentication: On
+** Root Url: http://localhost:8080/
+** Redirect Uris: http://localhost:8080/*
+
+Save client and copy the client secret from the credentials tab.
+Put this and the following settings in the api/.env file
+[source,properties]
+----
+AUTH_KEYCLOAK_DRIVER="openid"
+AUTH_KEYCLOAK_CLIENT_ID="directus"
+AUTH_KEYCLOAK_CLIENT_SECRET="FILLMEIN"
+AUTH_KEYCLOAK_ISSUER_URL="https://sso-test.vpro.nl/auth/realms/vpro-azure/.well-known/openid-configuration"
+AUTH_KEYCLOAK_IDENTIFIER_KEY="email"
+AUTH_KEYCLOAK_ALLOW_PUBLIC_REGISTRATION=true
+AUTH_PROVIDERS: 'keycloak'
+----
+To remove the login for the default provider from the login screen set the following in api/.env:
+[source,properties]
+----
+AUTH_DISABLE_DEFAULT=true
+----
+But only do so if you already given a user from keycloak admin rights in Directus.
 
 == Findings
 
@@ -112,6 +167,36 @@ pnpm --filter app dev
 I can construct a model via the data model editor.
 
 This just results in tables in the database, so I figure that the schema dump could serve to model in code.
+
+== Security
+Roles from keycloak are not automatically associated in Directus:
+https://github.com/directus/directus/pull/18131
+https://github.com/directus/directus/pull/16812
+https://github.com/directus/directus/pull/11306
+Dus iets gaan doen met een event action op auth.create en auth.update
+Zie https://docs.directus.io/extensions/hooks.html
+
+Multi-tenant is not implemented directly
+There is talk about business rules on
+https://docs.directus.io/user-guide/user-management/users-roles-permissions.html
+However no hints on how to implement that. Found in Workflow doc how you can set permissions to use fields in collection to restrict actions, through custom permissions.
+https://docs.directus.io/user-guide/user-management/permissions.html#configure-custom-permissions
+
+Multi Tenant discussion
+https://github.com/directus/directus/discussions/3987
+https://github.com/directus/directus/discussions/9682
+https://github.com/directus/directus/discussions/2687
+
+Users only have one role.
+That is a major limitation
+
+Use a separate 'groups' field and create custom permissions based on that?
+Something like this ?
+https://github.com/u12206050/directus-extension-role-chooser
+
+== Workflow
+https://docs.directus.io/guides/headless-cms/approval-workflows.html
+https://docs.directus.io/guides/headless-cms/schedule-content/dynamic-sites.html
 
 == data migration
 
