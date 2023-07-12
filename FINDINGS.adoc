@@ -172,15 +172,28 @@ https://docs.directus.io/guides/headless-cms/schedule-content/dynamic-sites.html
 The suggestion has been made to filter this on the api side, but that is insufficient for us. It would be better to leverage the custom permissions on the role used by the frontend (Public) to restrict access.
 
 === Images / Assets
-https://medium.com/birdie-ai/how-to-manage-your-content-with-directus-and-cloudinary-ded6ddd9a4b1
-https://docs.directus.io/reference/files.html
+Assets are called Files in Directus. They are quite simple and don't support much in the way of metadata. They do support multiple storage drivers so storing it in s3 is easy. Several storage drivers are supported.
+
+For the metadata the solution would be to create a separate collection to maintain those, which is quite easy. However the relation between the metadata and actual image is not enforced so there will be difficulty maintain correctness.
+
+Another option would be to modify the directus_files model. However the impact of doing that is a bit unclear. A short test revealed that a required field is not checked, so empty metadata would still be a problem.
+
+One could also store images mostly outside of directus, in Cloudinary, see
+https://medium.com/birdie-ai/how-to-manage-your-content-with-directus-and-cloudinary-ded6ddd9a4b1 for how to do that. That works by creating a custom datatype.
+
+For more discussion around this:
 https://github.com/directus/directus/discussions/7612
 https://github.com/directus/directus/discussions/14742
-s3 storage :
+
+Storage drivers:
 https://docs.directus.io/self-hosted/config-options.html#file-storage
 
+Sloppy: By default nobody has read access to the uploaded files so images won't render if you embed them in richtext.
 
 === Richtext
+Richtext is quite configurable most features can be enabled/disabled.
+There is however no way to link to other collections in the richtext.
+Links are always full urls. Storage is as html and images are stored as a complete img tag.
 
 === Data migration
 
@@ -219,7 +232,8 @@ npm init directus-extension@latest
 * Worfklow/Embargo must be implemented by us.
 * For multilingual content something like this could be done: https://medium.com/directus/multilingual-content-setup-in-directus-i18n-4f243f72e554
 * Multi-tenancy is not supported out-of-the box. Multi-project is the only solution to this without loads of work.
-
-
+* Assets are supported but will require extra metadata models
+* External asset management will require building extensions.
+* Richtext is just html, no references to other collections are possible other then through the encompassing model.
 
 
